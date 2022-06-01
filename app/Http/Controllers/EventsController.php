@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -177,11 +178,17 @@ class EventsController extends BaseController
                 }
             ]
         }
-    ]
+    ]Carbon::now()->toDateTimeString()
     ```
      */
 
     public function getFutureEventsWithWorkshops() {
-        throw new \Exception('implement in coding task 2');
+        //throw new \Exception('implement in coding task 2');
+        $events = Event::whereHas('workShops', function ($query) {
+            $query->where('start', ">=", Carbon::today()->toDateString());
+        })->get();
+
+
+        return response()->json($events,200);
     }
 }
